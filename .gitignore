@@ -1,0 +1,6 @@
+build/*
+test/test_roundtrip/check*.txt
+*.h
+*.c
+c_ryu.f90
+.vscode
