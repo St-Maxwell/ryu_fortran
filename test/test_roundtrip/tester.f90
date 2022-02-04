@@ -1,6 +1,5 @@
 program main
-    use ryu_real32
-    use ryu_real64
+    use ryu
     use iso_fortran_env, only: real32, real64
     implicit none
 
@@ -24,7 +23,7 @@ contains
         open (newunit=u2, file="test/test_roundtrip/check_first_50_float.txt")
         do i = 1, num_sample
             read (u, *) raw_float
-            string = float_to_string(raw_float)
+            string = f2shortest(raw_float)
             read (string, *) reverse_float
             if (i >= 1 .and. i <= 50) then
                 write (u2, "(ES16.7,2X,ES16.7,4X,A)") raw_float, reverse_float, string
@@ -55,7 +54,7 @@ contains
         open (newunit=u2, file="test/test_roundtrip/check_first_50_double.txt")
         do i = 1, num_sample
             read (u, *) raw_double
-            string = double_to_string(raw_double)
+            string = d2shortest(raw_double)
             read (string, *) reverse_double
             if (i >= 1 .and. i <= 50) then
                 write (u2, "(ES25.16,2X,ES25.16,4X,A)") raw_double, reverse_double, string

@@ -1,15 +1,13 @@
-module ryu_real64
-    use iso_fortran_env
+module real64_to_shortest
+    use ryu_utils, only: DOUBLE_MANTISSA_BITS, DOUBLE_MANTISSA_MASK, DOUBLE_EXPONENT_BITS, &
+                         DOUBLE_EXPONENT_MASK, DOUBLE_EXPONENT_BIAS, &
+                         accept_lower_bound, accept_upper_bound, pow5Factor
+    use iso_fortran_env, only: int32, int64, real64
     use ieee_arithmetic
     implicit none
     private
-    public :: double_to_string
+    public :: d2shortest
 
-    integer(kind=int32), parameter :: DOUBLE_MANTISSA_BITS = 52_int32
-    integer(kind=int64), parameter :: DOUBLE_MANTISSA_MASK = shiftl(1_int64, DOUBLE_MANTISSA_BITS) - 1_int64
-    integer(kind=int32), parameter :: DOUBLE_EXPONENT_BITS = 11_int32
-    integer(kind=int32), parameter :: DOUBLE_EXPONENT_MASK = shiftl(1_int32, DOUBLE_EXPONENT_BITS) - 1_int32
-    integer(kind=int32), parameter :: DOUBLE_EXPONENT_BIAS = shiftl(1_int32, DOUBLE_EXPONENT_BITS - 1_int32) - 1_int32
     integer(kind=int32), parameter :: POW5_BITCOUNT = 121_int32
     integer(kind=int32), parameter :: POW5_INV_BITCOUNT = 122_int32
     integer(kind=int32), parameter :: POW5_ARRAY_NCOL = 4_int32
@@ -639,7 +637,7 @@ module ryu_real64
 
 contains
 
-    function double_to_string(fn) result(str)
+    function d2shortest(fn) result(str)
         real(kind=real64), intent(in) :: fn
         character(len=:), allocatable :: str
         integer(kind=int64) :: bits
@@ -669,27 +667,27 @@ contains
 
         if (ieee_is_nan(fn)) then
             str = "NaN"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_positive_inf) then
             str = "Infinity"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_negative_inf) then
             str = "-Infinity"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_positive_zero) then
             str = "0.0"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_negative_zero) then
             str = "-0.0"
-            goto 9999
+            return
         end if
 
         !>!>write(*,"('float number is ',g0)") fn
@@ -780,7 +778,7 @@ contains
         !>write (*, "('dm_is_trailing_zeros = ',g0)") dm_is_trailing_zeros
 
         !! step 4
-        vplength = decimalLength(dp)
+        vplength = decimal_length(dp)
         expn = e10 + vplength - 1
         scientific_notation = .not. (expn >= -3 .and. expn < 7)
         removed = 0
@@ -944,9 +942,7 @@ contains
 
         str = str(1:idx)
 
-9999    return
-
-    end function double_to_string
+    end function d2shortest
 
     function pow5bits(e) result(r)
         integer(kind=int32), intent(in) :: e
@@ -956,7 +952,7 @@ contains
 
     end function pow5bits
 
-    function decimalLength(v) result(r)
+    function decimal_length(v) result(r)
         integer(kind=int64), intent(in) :: v
         integer(kind=int32) :: r
 
@@ -1000,7 +996,7 @@ contains
             r = 1; return
         end if
 
-    end function decimalLength
+    end function decimal_length
 
     function multipleOfPowerOf5(v, q) result(r)
         integer(kind=int64), intent(in) :: v
@@ -1010,38 +1006,6 @@ contains
         r = pow5Factor(v) >= q
 
     end function multipleOfPowerOf5
-
-    function pow5Factor(v) result(count)
-        integer(kind=int64), intent(in) :: v
-        integer(kind=int32) :: count
-        integer(kind=int64) :: v_
-
-        v_ = v
-        if (mod(v_, 5) /= 0) then
-            count = 0; return
-        end if
-        if (mod(v_, 25) /= 0) then
-            count = 1; return
-        end if
-        if (mod(v_, 125) /= 0) then
-            count = 2; return
-        end if
-        if (mod(v_, 625) /= 0) then
-            count = 3; return
-        end if
-
-        count = 4
-        v_ = v_/625
-
-        do while (v_ > 0)
-            if (mod(v_, 5) /= 0) return
-            v_ = v_/5
-            count = count + 1
-        end do
-
-        error stop "Illegal Argument"
-
-    end function pow5Factor
 
     function mulPow5divPow2(m, i, j) result(r)
         integer(kind=int64), intent(in) :: m
@@ -1107,17 +1071,5 @@ contains
 
     end function mulPow5InvDivPow2
 
-    !! now we always round to even
-    function accept_upper_bound(even) result(r)
-        logical(kind=int32), intent(in) :: even
-        logical(kind=int32) :: r
-        r = even
-    end function accept_upper_bound
 
-    function accept_lower_bound(even) result(r)
-        logical(kind=int32), intent(in) :: even
-        logical(kind=int32) :: r
-        r = even
-    end function accept_lower_bound
-
-end module ryu_real64
+end module real64_to_shortest

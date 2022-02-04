@@ -1,15 +1,13 @@
-module ryu_real32
-    use iso_fortran_env
+module real32_to_shortest
+    use ryu_utils, only: FLOAT_MANTISSA_BITS, FLOAT_MANTISSA_MASK, FLOAT_EXPONENT_BITS, &
+                         FLOAT_EXPONENT_MASK, FLOAT_EXPONENT_BIAS, &
+                         accept_lower_bound, accept_upper_bound
+    use iso_fortran_env, only: int32, int64, real32
     use ieee_arithmetic
     implicit none
     private
-    public :: float_to_string
+    public :: f2shortest
 
-    integer(kind=int32), parameter :: FLOAT_MANTISSA_BITS = 23_int32
-    integer(kind=int32), parameter :: FLOAT_MANTISSA_MASK = ishft(1, FLOAT_MANTISSA_BITS) - 1
-    integer(kind=int32), parameter :: FLOAT_EXPONENT_BITS = 8_int32
-    integer(kind=int32), parameter :: FLOAT_EXPONENT_MASK = ishft(1, FLOAT_EXPONENT_BITS) - 1
-    integer(kind=int32), parameter :: FLOAT_EXPONENT_BIAS = 127_int32
     integer(kind=int64), parameter :: LOG10_2_DENOMINATOR = 10000000_int64
     integer(kind=int64), parameter :: LOG10_2_NUMERATOR = int(LOG10_2_DENOMINATOR*log10(2.), int64)
     integer(kind=int64), parameter :: LOG10_5_DENOMINATOR = 10000000_int64
@@ -108,7 +106,7 @@ module ryu_real32
 
 contains
 
-    function float_to_string(fn) result(str)
+    function f2shortest(fn) result(str)
         real(kind=real32), intent(in) :: fn
         character(len=:), allocatable :: str
         integer(kind=int32) :: bits
@@ -134,27 +132,27 @@ contains
 
         if (ieee_is_nan(fn)) then
             str = "NaN"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_positive_inf) then
             str = "Infinity"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_negative_inf) then
             str = "-Infinity"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_positive_zero) then
             str = "0.0"
-            goto 9999
+            return
         end if
 
         if (ieee_class(fn) == ieee_negative_zero) then
             str = "-0.0"
-            goto 9999
+            return
         end if
 
         !>write(*,"('float number is ',g0)") fn
@@ -209,9 +207,9 @@ contains
                 last_remove_digit = int(mod(mulPow5InvDivPow2(mv, q - 1, -e2 + q - 1 + l), 10), int32)
             end if
             e10 = q
-            dp_is_trailing_zeros = pow5factor(mp) >= q
-            dv_is_trailing_zeros = pow5factor(mv) >= q
-            dm_is_trailing_zeros = pow5factor(mm) >= q
+            dp_is_trailing_zeros = pow5Factor(mp) >= q
+            dv_is_trailing_zeros = pow5Factor(mv) >= q
+            dm_is_trailing_zeros = pow5Factor(mm) >= q
         else
             q = int(-e2*LOG10_5_NUMERATOR/LOG10_5_DENOMINATOR, int32)
             i = -e2 - q
@@ -376,9 +374,7 @@ contains
         !>write(*,"(A)") str
         str = str(1:idx)
 
-9999    return
-
-    end function float_to_string
+    end function f2shortest
 
     function pow5bits(e) result(r)
         integer(kind=int32), intent(in) :: e
@@ -392,7 +388,7 @@ contains
 
     end function pow5bits
 
-    function pow5factor(v) result(count)
+    function pow5Factor(v) result(count)
         integer(kind=int32), intent(in) :: v
         integer(kind=int32) :: count
         integer(kind=int32) :: v_
@@ -408,7 +404,7 @@ contains
 
         error stop "Illegal Argument"
 
-    end function pow5factor
+    end function pow5Factor
 
     function mulPow5divPow2(m, q, j) result(r)
         integer(kind=int32), intent(in) :: m
@@ -464,17 +460,4 @@ contains
 
     end function decimal_length
 
-    !! now we always round to even
-    function accept_upper_bound(even) result(r)
-        logical(kind=int32), intent(in) :: even
-        logical(kind=int32) :: r
-        r = even
-    end function accept_upper_bound
-
-    function accept_lower_bound(even) result(r)
-        logical(kind=int32), intent(in) :: even
-        logical(kind=int32) :: r
-        r = even
-    end function accept_lower_bound
-
-end module ryu_real32
+end module real32_to_shortest
