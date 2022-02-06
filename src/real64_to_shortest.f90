@@ -653,7 +653,7 @@ contains
         integer(kind=int32) :: e10
         integer(kind=int32) :: q, k, i, j
         logical(kind=int32) :: dv_is_trailing_zeros, dm_is_trailing_zeros
-        integer(kind=int32) :: last_remove_digit
+        integer(kind=int32) :: last_removed_digit
         integer(kind=int32) :: vplength
         integer(kind=int32) :: expn
         logical(kind=int32) :: scientific_notation
@@ -729,6 +729,8 @@ contains
         !>write (*, "('mm = ',g0)") mm
 
         !! step 3
+        dm_is_trailing_zeros = .false.
+        dv_is_trailing_zeros = .false.
         if (e2 >= 0) then
             q = max(0, shiftr(e2*78913, 18) - 1)
             k = POW5_INV_BITCOUNT + pow5bits(q) - 1
@@ -782,6 +784,7 @@ contains
         expn = e10 + vplength - 1
         scientific_notation = .not. (expn >= -3 .and. expn < 7)
         removed = 0
+        last_removed_digit = 0
         if (dm_is_trailing_zeros .or. dv_is_trailing_zeros) then
             done = .false.
             do while (dp/10 > dm/10 .and. .not. done)
@@ -789,8 +792,8 @@ contains
                     done = .true.
                 else
                     dm_is_trailing_zeros = dm_is_trailing_zeros .and. mod(dm, 10) == 0
-                    dv_is_trailing_zeros = dv_is_trailing_zeros .and. last_remove_digit == 0
-                    last_remove_digit = int(mod(dv, 10), int32)
+                    dv_is_trailing_zeros = dv_is_trailing_zeros .and. last_removed_digit == 0
+                    last_removed_digit = int(mod(dv, 10), int32)
                     dp = dp/10
                     dv = dv/10
                     dm = dm/10
@@ -804,8 +807,8 @@ contains
                     if (dp < 100 .and. scientific_notation) then
                         done = .true.
                     else
-                        dv_is_trailing_zeros = dv_is_trailing_zeros .and. last_remove_digit == 0
-                        last_remove_digit = int(mod(dv, 10), int32)
+                        dv_is_trailing_zeros = dv_is_trailing_zeros .and. last_removed_digit == 0
+                        last_removed_digit = int(mod(dv, 10), int32)
                         dp = dp/10
                         dv = dv/10
                         dm = dm/10
@@ -814,12 +817,12 @@ contains
                 end do
             end if
 
-            if (dv_is_trailing_zeros .and. last_remove_digit == 5 .and. mod(dv, 2) == 0) then
-                last_remove_digit = 4
+            if (dv_is_trailing_zeros .and. last_removed_digit == 5 .and. mod(dv, 2) == 0) then
+                last_removed_digit = 4
             end if
 
             if ((dv == dm .and. .not. (dm_is_trailing_zeros .and. accept_lower_bound(even))) &
-                .or. last_remove_digit >= 5) then
+                .or. last_removed_digit >= 5) then
                 output = dv + 1
             else
                 output = dv
@@ -830,14 +833,14 @@ contains
                 if (dp < 100 .and. scientific_notation) then
                     done = .true.
                 else
-                    last_remove_digit = int(mod(dv, 10), int32)
+                    last_removed_digit = int(mod(dv, 10), int32)
                     dp = dp/10
                     dv = dv/10
                     dm = dm/10
                     removed = removed + 1
                 end if
             end do
-            if (dv == dm .or. last_remove_digit >= 5) then
+            if (dv == dm .or. last_removed_digit >= 5) then
                 output = dv + 1
             else
                 output = dv
