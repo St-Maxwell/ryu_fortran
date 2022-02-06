@@ -1,15 +1,20 @@
 name = "ryu_fortran"
 version = "0.1.0"
 license = "license"
-author = "Jane Doe"
-maintainer = "jane.doe@example.com"
-copyright = "Copyright 2022, Jane Doe"
+maintainer = "St Maxwell"
+
 [build]
 auto-executables = true
-auto-examples = true
-[install]
-library = false
+
+[dev-dependencies]
+test-drive.git = "https://github.com/fortran-lang/test-drive.git"
+
 [[test]]
-name = "test-roundtrip"
-source-dir = "test/test_roundtrip"
+name = "test-f2shortest"
+source-dir = "test/test_f2shortest"
+main = "tester.f90"
+
+[[test]]
+name = "test-d2shortest"
+source-dir = "test/test_d2shortest"
 main = "tester.f90"
