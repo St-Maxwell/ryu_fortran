@@ -34,7 +34,7 @@ write (*, "(A)") d2exp(299792458._real64, 5)
 ## Test
 Ryu algorithm is meant to generate the shortest decimal representaion of a floating point number, and is able to preserve the information after conversion. That is, if we convert the produced string back to a floating point number, we should obtain the same binary representation comparing to the original number.
 
-`f2shortest` and `d2shortest` have been fully tested using the test cases from [ulfjack/ryu](https://github.com/ulfjack/ryu/tree/master/ryu/tests).
+`f2shortest`, `d2shortest`, `d2fixed` and `d2exp` have been fully tested using the test cases from [ulfjack/ryu](https://github.com/ulfjack/ryu/tree/master/ryu/tests).
 
 To perform the tests, run
 ```bash
