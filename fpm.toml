@@ -18,3 +18,13 @@ main = "tester.f90"
 name = "test-d2shortest"
 source-dir = "test/test_d2shortest"
 main = "tester.f90"
+
+[[test]]
+name = "test-d2exp"
+source-dir = "test/test_d2exp"
+main = "tester.f90"
+
+[[test]]
+name = "test-d2fixed"
+source-dir = "test/test_d2fixed"
+main = "tester.f90"

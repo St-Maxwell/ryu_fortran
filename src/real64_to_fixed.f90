@@ -2,6 +2,7 @@ module real64_to_fixed
     use ryu_utils
     use ryu_lookup_table
     use iso_fortran_env, only: int32, int64, real64
+    use ieee_arithmetic
     implicit none
     private
     public :: d2fixed
@@ -13,7 +14,7 @@ contains
         integer(kind=int32), intent(in) :: precision_
         character(len=:), allocatable :: str
 
-        character(len=200) :: buffer
+        character(len=2000) :: buffer
         integer(kind=int32) :: precision
         integer(kind=int64) :: bits
         integer(kind=int32) :: ieee_exponent
@@ -41,7 +42,38 @@ contains
         character(len=1) :: chr
 
         ! deal with special cases
-        ! to-do
+        if (ieee_is_nan(d)) then
+            str = "NaN"
+            return
+        end if
+
+        if (ieee_class(d) == ieee_positive_inf) then
+            str = "Infinity"
+            return
+        end if
+
+        if (ieee_class(d) == ieee_negative_inf) then
+            str = "-Infinity"
+            return
+        end if
+
+        if (ieee_class(d) == ieee_positive_zero) then
+            if (precision_ > 0) then
+                str = "0." // repeat('0', precision_)
+            else
+                str = '0'
+            end if
+            return
+        end if
+
+        if (ieee_class(d) == ieee_negative_zero) then
+            if (precision_ > 0) then
+                str = "-0." // repeat('0', precision_)
+            else
+                str = "-0"
+            end if
+            return
+        end if
 
         bits = transfer(d, 1_int64)
         ieee_sign = bits < 0
