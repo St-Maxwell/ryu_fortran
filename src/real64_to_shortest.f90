@@ -947,7 +947,7 @@ contains
 
     end function d2shortest
 
-    function pow5bits(e) result(r)
+    pure function pow5bits(e) result(r)
         integer(kind=int32), intent(in) :: e
         integer(kind=int32) :: r
 
@@ -955,7 +955,7 @@ contains
 
     end function pow5bits
 
-    function decimal_length(v) result(r)
+    pure function decimal_length(v) result(r)
         integer(kind=int64), intent(in) :: v
         integer(kind=int32) :: r
 
@@ -1001,7 +1001,7 @@ contains
 
     end function decimal_length
 
-    function multipleOfPowerOf5(v, q) result(r)
+    pure function multipleOfPowerOf5(v, q) result(r)
         integer(kind=int64), intent(in) :: v
         integer(kind=int32), intent(in) :: q
         logical(kind=int32) :: r
@@ -1010,7 +1010,7 @@ contains
 
     end function multipleOfPowerOf5
 
-    function mulPow5divPow2(m, i, j) result(r)
+    pure function mulPow5divPow2(m, i, j) result(r)
         integer(kind=int64), intent(in) :: m
         integer(kind=int32), intent(in) :: i
         integer(kind=int32), intent(in) :: j
@@ -1042,7 +1042,7 @@ contains
 
     end function mulPow5divPow2
 
-    function mulPow5InvDivPow2(m, i, j) result(r)
+    pure function mulPow5InvDivPow2(m, i, j) result(r)
         integer(kind=int64), intent(in) :: m
         integer(kind=int32), intent(in) :: i
         integer(kind=int32), intent(in) :: j

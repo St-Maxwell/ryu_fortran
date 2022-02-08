@@ -384,7 +384,7 @@ contains
 
     end function f2shortest
 
-    function pow5bits(e) result(r)
+    pure function pow5bits(e) result(r)
         integer(kind=int32), intent(in) :: e
         integer(kind=int32) :: r
 
@@ -396,7 +396,7 @@ contains
 
     end function pow5bits
 
-    function pow5Factor(v) result(count)
+    pure function pow5Factor(v) result(count)
         integer(kind=int32), intent(in) :: v
         integer(kind=int32) :: count
         integer(kind=int32) :: v_
@@ -414,7 +414,7 @@ contains
 
     end function pow5Factor
 
-    function mulPow5divPow2(m, q, j) result(r)
+    pure function mulPow5divPow2(m, q, j) result(r)
         integer(kind=int32), intent(in) :: m
         integer(kind=int32), intent(in) :: q
         integer(kind=int32), intent(in) :: j
@@ -431,7 +431,7 @@ contains
 
     end function mulPow5divPow2
 
-    function mulPow5InvDivPow2(m, q, j) result(r)
+    pure function mulPow5InvDivPow2(m, q, j) result(r)
         integer(kind=int32), intent(in) :: m
         integer(kind=int32), intent(in) :: q
         integer(kind=int32), intent(in) :: j
@@ -448,7 +448,7 @@ contains
 
     end function mulPow5InvDivPow2
 
-    function decimal_length(v) result(r)
+    pure function decimal_length(v) result(r)
         integer(kind=int32), intent(in) :: v
         integer(kind=int32) :: r
         integer(kind=int32) :: factor

@@ -38,8 +38,31 @@ Ryu algorithm is meant to generate the shortest decimal representaion of a float
 
 To perform the tests, run
 ```bash
-fpm test [test-item] --flag "-fno-range-check"
+fpm test [test-item] --flag -fno-range-check
 ```
 where `test-item` can be `test-f2shortest`, `test-d2shortest`, `test-d2fixed` and `test-d2exp`.
 
 If you use gfortran to build this project, the compiler option '`-fno-range-check`' is needed. Because in `lookup_table.f90` there is an `int64` literal constant '`-6917529027641081856`' which is the minimum value of signed 64-bits integer type, and for some reason (maybe a gfortran's bug) it will cause compilation error.
+
+## Benchmark
+* Compiler: gfortran version 10.3.0 (Rev2, Built by MSYS2 project)
+* Command: `fpm test benchmark --flag -fno-range-check --profile release`
+
+Results
+```
+Benchmark for f2shortest
+f2shortest Time (us): 0.0621875   Std Dev:  0.4364
+internal IO Time (us): 1.2768750   Std Dev:  1.5583
+
+Benchmark for d2shortest
+d2shortest Time (us): 0.0668750   Std Dev:  0.4544
+internal IO Time (us): 1.2715625   Std Dev:  1.5535
+
+Benchmark for d2exp
+d2exp Time (us): 0.1909375   Std Dev:  0.7485
+internal IO Time (us): 1.3421875   Std Dev:  1.5701
+
+Benchmark for d2fixed
+d2fixed Time (us): 0.1406250   Std Dev:  0.6493
+internal IO Time (us): 1.3412500   Std Dev:  1.5643
+```
