@@ -51,18 +51,18 @@ If you use gfortran to build this project, the compiler option '`-fno-range-chec
 Results
 ```
 Benchmark for f2shortest
-f2shortest Time (us): 0.0621875   Std Dev:  0.4364
-internal IO Time (us): 1.2768750   Std Dev:  1.5583
+f2shortest Time (us): 0.2034375   Std Dev:  0.7835
+internal IO Time (us): 1.7143750   Std Dev:  1.7197
 
 Benchmark for d2shortest
-d2shortest Time (us): 0.0668750   Std Dev:  0.4544
-internal IO Time (us): 1.2715625   Std Dev:  1.5535
+d2shortest Time (us): 0.2206250   Std Dev:  0.8150
+internal IO Time (us): 2.2768750   Std Dev:  1.6511
 
 Benchmark for d2exp
-d2exp Time (us): 0.1909375   Std Dev:  0.7485
-internal IO Time (us): 1.3421875   Std Dev:  1.5701
+d2exp Time (us): 0.2928125   Std Dev:  0.9277
+internal IO Time (us): 2.0884375   Std Dev:  1.7118
 
 Benchmark for d2fixed
-d2fixed Time (us): 0.1406250   Std Dev:  0.6493
-internal IO Time (us): 1.3412500   Std Dev:  1.5643
+d2fixed Time (us): 0.8700000   Std Dev:  1.5003
+internal IO Time (us): 4.6196875   Std Dev:  4.7283
 ```
