@@ -1032,8 +1032,6 @@ contains
         bits00 = mLow*POW5_SPLIT(i*POW5_ARRAY_NCOL + 4)
         actual_shift = j - 3*31 - 21
 
-        if (actual_shift < 0) error stop "Illegal Argument"
-
         r = shiftr(shiftr(shiftr(shiftr(shiftr(bits00, 31) &
                                         + bits01 + bits10, 31) &
                                  + bits02 + bits11, 31) &
@@ -1063,8 +1061,6 @@ contains
         bits10 = mHigh*POW5_INV_SPLIT(i*POW5_ARRAY_NCOL + 4)
         bits00 = mLow*POW5_INV_SPLIT(i*POW5_ARRAY_NCOL + 4)
         actual_shift = j - 3*31 - 21
-
-        if (actual_shift < 0) error stop "Illegal Argument"
 
         r = shiftr(shiftr(shiftr(shiftr(shiftr(bits00, 31) &
                                         + bits01 + bits10, 31) &

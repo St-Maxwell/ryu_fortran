@@ -104,11 +104,11 @@ contains
 
     end function mulShift_mod1e9
 
-    function umul128(a, b, productHi) result(r)
+    function umul128(a, b, productHi) result(productLo)
         integer(kind=int64), intent(in) :: a
         integer(kind=int64), intent(in) :: b
         integer(kind=int64), intent(out) :: productHi
-        integer(kind=int64) :: r
+        integer(kind=int64) :: productLo
 
         integer(kind=int64) :: aLo, aHi, bLo, bHi
         integer(kind=int64) :: b00, b01, b10, b11
@@ -119,37 +119,32 @@ contains
         integer(kind=int64) :: mid2Lo, mid2Hi
         integer(kind=int64) :: pHi, pLo
 
-        aLo = 0_int64; aHi = 0_int64
-        bLo = 0_int64; bHi = 0_int64
-        call mvbits(a, 0, 32, aLo, 0)
-        call mvbits(a, 32, 32, aHi, 0)
-        call mvbits(b, 0, 32, bLo, 0)
-        call mvbits(b, 32, 32, bHi, 0)
+        aLo = iand(a, 4294967295_int64) ! 4294967295 is 0xFFFFFFFF
+        aHi = iand(shiftr(a, 32), 4294967295_int64)
+        bLo = iand(b, 4294967295_int64)
+        bHi = iand(shiftr(b, 32), 4294967295_int64)
 
         b00 = aLo*bLo
         b01 = aLo*bHi
         b10 = aHi*bLo
         b11 = aHi*bHi
 
-        b00Lo = 0_int64; b00Hi = 0_int64
-        call mvbits(b00, 0, 32, b00Lo, 0)
-        call mvbits(b00, 32, 32, b00Hi, 0)
+        b00Lo = iand(b00, 4294967295_int64)
+        b00Hi = iand(shiftr(b00, 32), 4294967295_int64)
 
         mid1 = b10 + b00Hi
-        mid1Lo = 0_int64; mid1Hi = 0_int64
-        call mvbits(mid1, 0, 32, mid1Lo, 0)
-        call mvbits(mid1, 32, 32, mid1Hi, 0)
+        mid1Lo = iand(mid1, 4294967295_int64)
+        mid1Hi = iand(shiftr(mid1, 32), 4294967295_int64)
 
         mid2 = b01 + mid1Lo
-        mid2Lo = 0_int64; mid2Hi = 0_int64
-        call mvbits(mid2, 0, 32, mid2Lo, 0)
-        call mvbits(mid2, 32, 32, mid2Hi, 0)
+        mid2Lo = iand(mid2, 4294967295_int64)
+        mid2Hi = iand(shiftr(mid2, 32), 4294967295_int64)
 
         pHi = b11 + mid1Hi + mid2Hi
         pLo = ior(shiftl(mid2Lo, 32), b00Lo)
 
         productHi = pHi
-        r = pLo
+        productLo = pLo
 
     end function umul128
 

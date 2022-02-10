@@ -45,24 +45,24 @@ where `test-item` can be `test-f2shortest`, `test-d2shortest`, `test-d2fixed` an
 If you use gfortran to build this project, the compiler option '`-fno-range-check`' is needed. Because in `lookup_table.f90` there is an `int64` literal constant '`-6917529027641081856`' which is the minimum value of signed 64-bits integer type, and for some reason (maybe a gfortran's bug) it will cause compilation error.
 
 ## Benchmark
-* Compiler: gfortran version 10.3.0 (Rev2, Built by MSYS2 project)
+* Compiler: gfortran version 9.3.0 (Ubuntu-20.04 WSL2)
 * Command: `fpm test benchmark --flag -fno-range-check --profile release`
 
 Results
 ```
 Benchmark for f2shortest
-f2shortest Time (us): 0.2019531   Std Dev:  0.3438
-internal IO Time (us): 1.6445312   Std Dev:  0.3450
+f2shortest Time (us): 0.0785894   Std Dev:  0.0118
+internal IO Time (us): 0.7998928   Std Dev:  0.0778
 
 Benchmark for d2shortest
-d2shortest Time (us): 0.2128906   Std Dev:  0.3496
-internal IO Time (us): 2.1968750   Std Dev:  0.4361
+d2shortest Time (us): 0.1047708   Std Dev:  0.0110
+internal IO Time (us): 0.9942683   Std Dev:  0.1660
 
 Benchmark for d2exp
-d2exp Time (us): 0.2976563   Std Dev:  0.3794
-internal IO Time (us): 2.0078125   Std Dev:  0.4105
+d2exp Time (us): 0.1041636   Std Dev:  0.0167
+internal IO Time (us): 0.9326320   Std Dev:  0.1252
 
 Benchmark for d2fixed
-d2fixed Time (us): 0.8589844   Std Dev:  0.9782
-internal IO Time (us): 4.4464844   Std Dev:  4.2765
+d2fixed Time (us): 0.2314018   Std Dev:  0.2261
+internal IO Time (us): 2.3488336   Std Dev:  2.3387
 ```

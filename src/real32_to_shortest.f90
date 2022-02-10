@@ -20,7 +20,7 @@ module real32_to_shortest
     integer(kind=int32), parameter :: POW5_INV_HALF_BITCOUNT = 31_int32
     integer(kind=int32), parameter :: POW5_ARRAY_NCOL = 2
 
-    integer(kind=int32), dimension(*), parameter :: POW5_SPLIT = [ &
+    integer(kind=int64), dimension(*), parameter :: POW5_SPLIT = [ &
                                                     536870912, 0, &
                                                     671088640, 0, &
                                                     838860800, 0, &
@@ -70,7 +70,7 @@ module real32_to_shortest
                                                     940395480, 1412679181 &
                                                     ]
 
-    integer(kind=int32), dimension(*), parameter :: POW5_INV_SPLIT = [ &
+    integer(kind=int64), dimension(*), parameter :: POW5_INV_SPLIT = [ &
                                                     268435456, 1, &
                                                     214748364, 1717986919, &
                                                     171798691, 1803886265, &
@@ -422,12 +422,10 @@ contains
 
         integer(kind=int64) :: bits0, bits1
 
-        if (j < POW5_HALF_BITCOUNT) error stop "Illegal Argument"
+        bits0 = m*POW5_SPLIT(q*POW5_ARRAY_NCOL + 1)
+        bits1 = m*POW5_SPLIT(q*POW5_ARRAY_NCOL + 2)
 
-        bits0 = m*int(POW5_SPLIT(q*POW5_ARRAY_NCOL + 1), int64)
-        bits1 = m*int(POW5_SPLIT(q*POW5_ARRAY_NCOL + 2), int64)
-
-        r = ishft(bits0 + ishft(bits1, -POW5_HALF_BITCOUNT), POW5_HALF_BITCOUNT - j)
+        r = shiftr(bits0 + shiftr(bits1, POW5_HALF_BITCOUNT), j - POW5_HALF_BITCOUNT)
 
     end function mulPow5divPow2
 
@@ -439,12 +437,10 @@ contains
 
         integer(kind=int64) :: bits0, bits1
 
-        if (j < POW5_INV_HALF_BITCOUNT) error stop "Illegal Argument"
+        bits0 = m*POW5_INV_SPLIT(q*POW5_ARRAY_NCOL + 1)
+        bits1 = m*POW5_INV_SPLIT(q*POW5_ARRAY_NCOL + 2)
 
-        bits0 = m*int(POW5_INV_SPLIT(q*POW5_ARRAY_NCOL + 1), int64)
-        bits1 = m*int(POW5_INV_SPLIT(q*POW5_ARRAY_NCOL + 2), int64)
-
-        r = ishft(bits0 + ishft(bits1, -POW5_INV_HALF_BITCOUNT), POW5_INV_HALF_BITCOUNT - j)
+        r = shiftr(bits0 + shiftr(bits1, POW5_INV_HALF_BITCOUNT), j - POW5_INV_HALF_BITCOUNT)
 
     end function mulPow5InvDivPow2
 
