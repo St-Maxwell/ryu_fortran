@@ -130,8 +130,6 @@ contains
         integer(kind=int32) :: c
         integer(kind=int32) :: current
 
-        !write(*,"('float number is ',g0)") fn
-
         if (ieee_is_nan(fn)) then
             str = "NaN"
             return
@@ -157,17 +155,11 @@ contains
             return
         end if
 
-        !>write(*,"('float number is ',g0)") fn
-
         !! step 1
         bits = transfer(fn, 1_int32)
         ieee_sign = bits < 0
         ieee_exponent = iand(ishft(bits, -FLOAT_MANTISSA_BITS), FLOAT_EXPONENT_MASK)
         ieee_mantissa = iand(bits, FLOAT_MANTISSA_MASK)
-
-        !>write(*,"('ieee_sign = ',g0)") ieee_sign
-        !>write(*,"('ieee_exponent = ',g0)") ieee_exponent
-        !>write(*,"('ieee_mantissa = ',g0)") ieee_mantissa
 
         if (ieee_exponent == 0) then
             e2 = 1 - FLOAT_EXPONENT_BIAS - FLOAT_MANTISSA_BITS - 2
@@ -177,8 +169,6 @@ contains
             m2 = ior(ieee_mantissa, ishft(1, FLOAT_MANTISSA_BITS))
         end if
 
-        !>write(*,"('e2 = ',g0)") e2
-        !>write(*,"('m2 = ',g0)") m2
 
         !! step 2
         even = iand(m2, 1) == 0
@@ -189,10 +179,6 @@ contains
         else
             mm = 4*m2 - 1
         end if
-
-        !>write(*,"('mv = ',g0)") mv
-        !>write(*,"('mp = ',g0)") mp
-        !>write(*,"('mm = ',g0)") mm
 
         !! step 3
         last_remove_digit = 0_int32
@@ -236,16 +222,6 @@ contains
                 dv_is_trailing_zeros = iand(mv, shiftl(1, q-1) - 1) == 0
             end if
         end if
-
-        !>write(*,"('dv = ',g0)") dv
-        !>write(*,"('dp = ',g0)") dp
-        !>write(*,"('dm = ',g0)") dm
-        !>write(*,"('e10 = ',g0)") e10
-
-        !>write(*,"('last_remove_digit = ',g0)") last_remove_digit
-        !>write(*,"('dp_is_trailing_zeros = ',g0)") dp_is_trailing_zeros
-        !>write(*,"('dv_is_trailing_zeros = ',g0)") dv_is_trailing_zeros
-        !>write(*,"('dm_is_trailing_zeros = ',g0)") dm_is_trailing_zeros
 
         !! step 4
         dplength = decimal_length(dp)
@@ -294,10 +270,6 @@ contains
         end if
 
         olength = dplength - removed
-
-        !>write(*,"('output = ',g0)") output
-        !>write(*,"('expn = ',g0)") expn
-        !>write(*,"('olength = ',g0)") olength
 
         !! step 5
         str = repeat(' ', 15)
@@ -378,8 +350,6 @@ contains
             end if
         end if
 
-        !>write(*,"(g0)") idx
-        !>write(*,"(A)") str
         str = str(1:idx)
 
     end function f2shortest

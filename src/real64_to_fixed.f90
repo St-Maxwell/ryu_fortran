@@ -199,7 +199,7 @@ contains
                 dot_index = 1
                 do
                     round_index = round_index - 1
-                    chr = buffer(round_index:round_index)
+                    if (round_index /= 0) chr = buffer(round_index:round_index)
                     if (round_index == 0 .or. chr == '-') then
                         buffer(round_index + 1:round_index + 1) = '1'
                         if (dot_index > 1) then

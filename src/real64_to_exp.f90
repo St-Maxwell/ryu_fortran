@@ -90,11 +90,6 @@ contains
             m2 = ior(ieee_mantissa, shiftl(1_int64, DOUBLE_MANTISSA_BITS))
         end if
 
-        !>write (*, "('ieee_exponent = ',g0)") ieee_exponent
-        !>write (*, "('ieee_mantissa = ',g0)") ieee_mantissa
-        !>write (*, "('e2 = ',g0)") e2
-        !>write (*, "('m2 = ',g0)") m2
-
         precision = precision_
         print_decimal_point = precision > 0
         precision = precision + 1
@@ -186,12 +181,6 @@ contains
             end do
         end if
 
-        !>write(*,"('digits = ',g0)") digits
-        !>write(*,"('expn = ',g0)") expn
-        !>write(*,"('printed_digits = ',g0)") printed_digits
-        !>write(*,"('available_digits = ',g0)") available_digits
-        !>write(*,"('print_decimal_point = ',g0)") print_decimal_point
-
         maximum = precision - printed_digits
 
         if (available_digits == 0) digits = 0
@@ -240,7 +229,7 @@ contains
             round_index = index
             do
                 round_index = round_index - 1
-                chr = buffer(round_index:round_index)
+                if (round_index /= 0) chr = buffer(round_index:round_index)
                 if (round_index == 0 .or. chr == '-') then
                     buffer(round_index + 1:round_index + 1) = '1'
                     expn = expn + 1

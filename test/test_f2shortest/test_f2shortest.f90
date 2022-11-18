@@ -8,9 +8,9 @@ module test_f2shortest
     public :: collect_exact_value_round_even, collect_trailing_zeros, collect_regression
     public :: collect_looks_like_pow5, collect_output_length
 
-    real(kind=real32), parameter :: NaN = transfer(4286578689_4, 1._real32)
-    real(kind=real32), parameter :: plus_infinity = transfer(2139095040_4, 1._real32)
-    real(kind=real32), parameter :: minus_infinity = transfer(4286578688_4, 1._real32)
+    real(kind=real32), parameter :: NaN = transfer(int(z'FF800001', int32), 1._real32)
+    real(kind=real32), parameter :: plus_infinity = transfer(int(z'7F800000', int32), 1._real32)
+    real(kind=real32), parameter :: minus_infinity = transfer(int(z'FF800000', int32), 1._real32)
 
 contains
 

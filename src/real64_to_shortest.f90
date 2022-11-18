@@ -690,8 +690,6 @@ contains
             return
         end if
 
-        !>!>write(*,"('float number is ',g0)") fn
-
         !! step 1
         bits = transfer(fn, 1_int64)
         ieee_sign = bits < 0
@@ -706,12 +704,6 @@ contains
             m2 = ior(ieee_mantissa, shiftl(1_int64, DOUBLE_MANTISSA_BITS))
         end if
 
-        !>write (*, "('DOUBLE_MANTISSA_MASK = ',g0)") DOUBLE_MANTISSA_MASK
-        !>write (*, "('ieee_exponent = ',g0)") ieee_exponent
-        !>write (*, "('ieee_mantissa = ',g0)") ieee_mantissa
-        !>write (*, "('e2 = ',g0)") e2
-        !>write (*, "('m2 = ',g0)") m2
-
         !! step 2
         even = iand(m2, 1_int64) == 0
         mv = 4*m2
@@ -722,11 +714,6 @@ contains
             mmShift = 0
         end if
         mm = 4*m2 - 1 - mmShift
-
-        !>write (*, "('mmshift = ',g0)") mmShift
-        !>write (*, "('mv = ',g0)") mv
-        !>write (*, "('mp = ',g0)") mp
-        !>write (*, "('mm = ',g0)") mm
 
         !! step 3
         dm_is_trailing_zeros = .false.
@@ -768,16 +755,6 @@ contains
                 dv_is_trailing_zeros = iand(mv, shiftl(1_int64, q - 1) - 1) == 0
             end if
         end if
-
-        !>write (*, "('dv = ',g0)") dv
-        !>write (*, "('dp = ',g0)") dp
-        !>write (*, "('dm = ',g0)") dm
-        !>write (*, "('e10 = ',g0)") e10
-
-        !>write (*, "('last_remove_digit = ',g0)") last_remove_digit
-        !>write (*, "('dp_is_trailing_zeros = ',g0)") dp_is_trailing_zeros
-        !>write (*, "('dv_is_trailing_zeros = ',g0)") dv_is_trailing_zeros
-        !>write (*, "('dm_is_trailing_zeros = ',g0)") dm_is_trailing_zeros
 
         !! step 4
         vplength = decimal_length(dp)
@@ -848,10 +825,6 @@ contains
         end if
 
         olength = vplength - removed
-
-        !>write (*, "('output = ',g0)") output
-        !>write (*, "('expn = ',g0)") expn
-        !>write (*, "('olength = ',g0)") olength
 
         !! step 5
         str = repeat(' ', 24)
@@ -939,9 +912,6 @@ contains
                 idx = idx + olength
             end if
         end if
-
-        !>write (*, "(g0)") idx
-        !>write (*, "(A)") str
 
         str = str(1:idx)
 
@@ -1069,6 +1039,5 @@ contains
                    + shiftl(bits13, 10), actual_shift)
 
     end function mulPow5InvDivPow2
-
 
 end module real64_to_shortest
